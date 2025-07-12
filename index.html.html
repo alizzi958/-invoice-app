@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🔐 تسجيل الدخول</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type=password], input[type=submit] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    input[type=submit] {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <form onsubmit="return login(event)">
+      <h2>تسجيل الدخول</h2>
+      <dl>
+        <dt>كلمة المرور:</dt>
+        <dd><input type="password" name="password" id="password" required></dd>
+        <dd><input type="submit" value="تسجيل الدخول"></dd>
+      </dl>
+      <div class="error" id="error"></div>
+    </form>
+  </div>
+
+  <script>
+    const correctPassword = "1234"; // يمكنك تغييره لاحقًا
+
+    function login(event) {
+      event.preventDefault();
+      const entered = document.getElementById("password").value;
+
+      if (entered === correctPassword) {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "main.html";
+      } else {
+        document.getElementById("error").textContent = "❌ كلمة المرور غير صحيحة";
+      }
+    }
+  </script>
+</body>
+</html>

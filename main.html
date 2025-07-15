@@ -1,1 +1,305 @@
-<!DOCTYPE html><html lang='ar'><head><meta charset='UTF-8'><title>الفاتورة</title></head><body><h1>Main Page</h1></body></html>
+<!DOCTYPE html>
+<html lang='ar' dir="rtl">
+<head>
+    <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الفواتير وعروض الأسعار</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #27ae60;
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 15px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 0;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            padding: 0 10px;
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tfoot td {
+            font-weight: bold;
+            background-color: var(--light);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-print {
+            background-color: var(--success);
+        }
+        
+        .btn-export {
+            background-color: #9b59b6;
+        }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>فاتورة ضريبية</h1>
+        </header>
+        
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="invoiceNumber">رقم الفاتورة</label>
+                    <input type="text" id="invoiceNumber" value="INV-2023-001" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="invoiceDate">تاريخ الفاتورة</label>
+                    <input type="date" id="invoiceDate">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="customerName">اسم العميل</label>
+                    <input type="text" id="customerName" placeholder="ادخل اسم العميل">
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">هاتف العميل</label>
+                    <input type="tel" id="customerPhone" placeholder="ادخل رقم الهاتف">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>تفاصيل الفاتورة</h2>
+            <table id="invoiceItems">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="35%">المنتج / الخدمة</th>
+                        <th width="15%">الكمية</th>
+                        <th width="15%">السعر</th>
+                        <th width="15%">الضريبة</th>
+                        <th width="15%">المجموع</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="item-name" placeholder="اسم المنتج"></td>
+                        <td><input type="number" class="item-quantity" min="1" value="1"></td>
+                        <td><input type="number" class="item-price" min="0" step="0.01" placeholder="0.00"></td>
+                        <td>
+                            <select class="item-tax">
+                                <option value="0.15">15%</option>
+                                <option value="0.10">10%</option>
+                                <option value="0.05">5%</option>
+                                <option value="0">0%</option>
+                            </select>
+                        </td>
+                        <td class="item-total">0.00</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align: right;">المجموع الفرعي:</td>
+                        <td id="subtotal">0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align: right;">مجموع الضريبة:</td>
+                        <td id="taxTotal">0.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align: right;">الإجمالي:</td>
+                        <td id="grandTotal">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button id="addItem" class="no-print">إضافة صنف</button>
+        </div>
+        
+        <div class="actions no-print">
+            <button id="calculateBtn">حساب الفاتورة</button>
+            <button id="saveBtn">حفظ الفاتورة</button>
+            <button class="btn-print" id="printBtn">طباعة</button>
+            <button class="btn-export" id="exportBtn">تصدير PDF</button>
+        </div>
+    </div>
+
+    <script>
+        // Set current date as default
+        document.getElementById('invoiceDate').valueAsDate = new Date();
+        
+        // Add new item row
+        document.getElementById('addItem').addEventListener('click', function() {
+            const table = document.getElementById('invoiceItems').getElementsByTagName('tbody')[0];
+            const rowCount = table.rows.length;
+            const newRow = table.insertRow();
+            
+            newRow.innerHTML = `
+                <td>${rowCount + 1}</td>
+                <td><input type="text" class="item-name" placeholder="اسم المنتج"></td>
+                <td><input type="number" class="item-quantity" min="1" value="1"></td>
+                <td><input type="number" class="item-price" min="0" step="0.01" placeholder="0.00"></td>
+                <td>
+                    <select class="item-tax">
+                        <option value="0.15">15%</option>
+                        <option value="0.10">10%</option>
+                        <option value="0.05">5%</option>
+                        <option value="0">0%</option>
+                    </select>
+                </td>
+                <td class="item-total">0.00</td>
+            `;
+        });
+        
+        // Calculate invoice
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            let subtotal = 0;
+            let taxTotal = 0;
+            
+            const rows = document.querySelectorAll('#invoiceItems tbody tr');
+            rows.forEach(row => {
+                const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const taxRate = parseFloat(row.querySelector('.item-tax').value) || 0;
+                
+                const rowTotal = quantity * price;
+                const rowTax = rowTotal * taxRate;
+                const rowTotalWithTax = rowTotal + rowTax;
+                
+                row.querySelector('.item-total').textContent = rowTotalWithTax.toFixed(2);
+                
+                subtotal += rowTotal;
+                taxTotal += rowTax;
+            });
+            
+            const grandTotal = subtotal + taxTotal;
+            
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('taxTotal').textContent = taxTotal.toFixed(2);
+            document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+        });
+        
+        // Print functionality
+        document.getElementById('printBtn').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Save functionality (placeholder)
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            alert('تم حفظ الفاتورة بنجاح!');
+        });
+        
+        // Export to PDF (placeholder)
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            alert('سيتم تصدير الفاتورة إلى PDF');
+        });
+    </script>
+</body>
+</html>
